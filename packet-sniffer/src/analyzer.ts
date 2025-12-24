@@ -16,34 +16,23 @@ export function analyze(
   if (!payload) return null;
 
   const text = payload.toString("utf8", 0, 200);
+  let reason = "No Pattern Matched";
   const severity = () => {
     for (const p of PATTERNS) {
       if (p.test(text)) {
+        reason = `Matched pattern: ${p.toString()}`;
         return "high";
       }
     }
     return "low";
   };
-//   for (const p of PATTERNS) {
-//     if (p.test(text)) {
-//         console.log(`Alert: Pattern ${p} matched between ${src} and ${dst}`);
-//       return {
-//         id: uuid(),
-//         time: new Date().toISOString(),
-//         src,
-//         dst,
-//         reason: `Matched ${p}`,
-//         payload: text
-//       };
-//     }
-//   }
 
     return {
         id: uuid(),
         time: new Date().toISOString(),
         src,
         dst,
-        reason: "Testing",
+        reason: reason,
         payload_preview: text.toString().slice(0, 50),
         severity: severity(),
         payload_ascii: text.replace(/[^ -~]+/g, '.'),

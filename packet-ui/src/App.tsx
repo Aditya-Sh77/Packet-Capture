@@ -4,22 +4,28 @@ import { io, Socket } from "socket.io-client";
 /* =======================
    Types
 ======================= */
-type Alert = {
-  id: string;
-  time: string;
-  src: string;
-  dst: string;
-  protocol: string;
-  src_port: number;
-  dst_port: number;
-  severity: "low" | "medium" | "high";
-  reason: string;
-  payload_preview: string;
-  payload_label: string;
-  payload_ascii: string;
-  raw_hex: string;
-  source?: "node" | "suricata"; // future-proof
-};
+// type Alert = {
+//   id: string;
+//   time: string;
+//   src: string;
+//   dst: string;
+//   protocol: string;
+//   src_port: number;
+//   dst_port: number;
+//   severity: "low" | "medium" | "high";
+//   reason: string;
+//   payload_preview: string | null;
+//   payload_label: string | null;
+//   payload_ascii: string | null;
+//   raw_hex: string | null;
+//   source?: "node" | "suricata"; // future-proof
+//   suricata?: {
+//     rule_id: number;
+//     category: string;
+//   };
+
+// };
+import { Alert } from "./types/alert";
 
 /* =======================
    Utils
@@ -78,6 +84,7 @@ export default function App() {
     });
 
     socket.on("alert", (alert) => {
+      console.log("Received alert:", alert.id);
       if (!captureRef.current) return;
 
       const next = [alert, ...alertsRef.current].slice(0, 1000);
@@ -101,7 +108,7 @@ export default function App() {
   return (
     <div className="flex h-screen font-sans bg-white dark:bg-gray-900 text-black dark:text-white">
       {/* ================= Sidebar ================= */}
-      <div className="w-[420px] border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 flex flex-col">
+      <div className="w-[30%] border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 flex flex-col">
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-xl font-bold">Packet Alerts</h2>
           <button
@@ -150,7 +157,7 @@ export default function App() {
                   {al.src}:{al.src_port} → {al.dst}:{al.dst_port}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300 truncate">
-                  {al.payload_preview.slice(0, 20)}
+                  {al.payload_preview?.slice(0, 20) || "<no preview>"}
                 </div>
                 <div className="text-xs text-gray-400">{al.time}</div>
               </div>
@@ -190,7 +197,7 @@ export default function App() {
                 <div>{selected.dst}:{selected.dst_port}</div>
               </div>
               <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                <div className="font-semibold">Proto</div>
+                <div className="font-semibold">Protocol</div>
                 <div>{selected.protocol}</div>
               </div>
             </div>

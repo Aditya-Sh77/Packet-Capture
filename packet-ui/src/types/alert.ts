@@ -1,4 +1,4 @@
-export type AlertSource = "node" | "suricata";
+export type AlertSource = "network" | "suricata" | "all";
 
 export type Severity = "low" | "medium" | "high";
 

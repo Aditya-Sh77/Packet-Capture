@@ -39,12 +39,17 @@ export function startSniffer() {
             const src = ret.info.srcaddr;
             const dst = ret.info.dstaddr;
 
-
             if (ret.info.protocol === PROTOCOL.IP.TCP) {
                 const tcp = decoders.TCP(buffer, ret.offset);
                 const payloadOffset = tcp.offset;
                 const payload = buffer.slice(payloadOffset, nbytes);
-                const alert = analyze(src, dst, payload);
+                const alert = analyze(src, dst, payload, "TCP");
+                if (alert) emitAlert(alert);
+            }else if (ret.info.protocol === PROTOCOL.IP.UDP) {
+                const udp = decoders.UDP(buffer, ret.offset);
+                const payloadOffset = udp.offset;
+                const payload = buffer.slice(payloadOffset, nbytes);
+                const alert = analyze(src, dst, payload, "UDP");
                 if (alert) emitAlert(alert);
             }
         } catch {

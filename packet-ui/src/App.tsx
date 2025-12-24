@@ -60,7 +60,7 @@ export default function App() {
     alertsRef.current = alerts;
   }, [alerts]);
 
-  // dark mode toggle
+  //dark mode toggle
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
@@ -105,8 +105,9 @@ export default function App() {
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-xl font-bold">Packet Alerts</h2>
           <button
-            onClick={() => setDarkMode((d) => !d)}
-            className="px-3 py-1 rounded-lg text-sm bg-gray-200 dark:bg-gray-700"
+            onClick={() => setDarkMode((dark) => !dark)}
+
+            className="px-3 py-1 rounded-lg text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             {darkMode ? "☀️" : "🌙"}
           </button>
@@ -114,14 +115,14 @@ export default function App() {
 
         <section className="flex justify-center items-center">
           <button
-            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 mr-10 w-[30%] bg-gray-200 dark:bg-gray-800"
+            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 mr-10 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
             onClick={() => setCapture((c) => !c)}
           >
             {capture ? "Stop Capture" : "Start Capture"}
           </button>
 
           <button
-            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 w-[30%] bg-gray-200 dark:bg-gray-800"
+            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
             onClick={() => {
               socketRef.current?.send(JSON.stringify({ type: "clear" }));
               alertsRef.current = [];
@@ -142,7 +143,7 @@ export default function App() {
             <div
               key={al.id}
               onClick={() => setSelected(al)}
-              className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl p-3 shadow-sm cursor-pointer flex justify-between items-center"
+              className={`${selected?.id === al.id ? 'bg-gray-300 dark:bg-gray-700' : 'bg-gray-100 dark:bg-gray-800'} hover:bg-gray-300 dark:hover:bg-gray-700 rounded-xl p-3 shadow-sm cursor-pointer flex justify-between items-center`}
             >
               <div>
                 <div className="font-semibold">

@@ -10,12 +10,20 @@ const PATTERNS = [
 export function analyze(
   src: string,
   dst: string,
-  payload: Buffer | string | null
+  payload: Buffer | string | null,
+  protocol: "TCP" | "UDP"
 ) {
   if (!payload) return null;
 
   const text = payload.toString("utf8", 0, 200);
-    
+  const severity = () => {
+    for (const p of PATTERNS) {
+      if (p.test(text)) {
+        return "high";
+      }
+    }
+    return "low";
+  };
 //   for (const p of PATTERNS) {
 //     if (p.test(text)) {
 //         console.log(`Alert: Pattern ${p} matched between ${src} and ${dst}`);
@@ -37,11 +45,11 @@ export function analyze(
         dst,
         reason: "Testing",
         payload_preview: text.toString().slice(0, 50),
-        severity: "medium",
+        severity: severity(),
         payload_ascii: text.replace(/[^ -~]+/g, '.'),
         raw_hex: payload.toString("hex"),
         payload_label: "Test Payload",
-        protocol: "TCP",
+        protocol: protocol,
         src_port: 12345,
         dst_port: 80
       };

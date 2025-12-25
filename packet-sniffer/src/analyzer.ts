@@ -1,11 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-const PATTERNS = [
-  /password/i,
-  /token=/i,
-  /authorization/i,
-  /ssh-rsa/i
-];
+import { PATTERNS } from "./patterns";
 
 export function analyze(
   src: string,

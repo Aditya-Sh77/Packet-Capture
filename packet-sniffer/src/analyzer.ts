@@ -32,7 +32,7 @@ export function analyze(
         severity: severity(),
         payload_ascii: text.replace(/[^ -~]+/g, '.'),
         raw_hex: payload.toString("hex"),
-        payload_label: "Test Payload",
+        payload_label: "unlabeled",
         protocol: protocol,
         src_port: 12345,
         dst_port: 80

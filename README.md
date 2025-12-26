@@ -1,37 +1,38 @@
 # Packet-Capture
 
-A real-time network packet capture and analysis system with security alerting capabilities. This project consists of a Node.js backend for packet sniffing and a React frontend for visualization.
+A real-time network packet capture and analysis system that monitors TCP/UDP traffic for security threats and sensitive data exposure.
 
 ## Features
 
-- **Real-time Packet Capture**: Captures TCP and UDP packets using libpcap
+- **Real-time Packet Sniffing**: Captures live network packets using libpcap
 - **Payload Analysis**: Scans packet payloads for sensitive patterns (passwords, tokens, SSH keys, etc.)
-- **Security Alerts**: Generates alerts based on severity levels (low, medium, high)
-- **Suricata Integration**: Reads alerts from Suricata intrusion detection system
-- **Web UI**: Modern React interface with real-time updates via WebSocket
-- **Multiple Payload Views**: ASCII, hex, and preview representations of packet data
+- **Alert System**: Generates alerts with severity levels based on detected patterns
+- **Web Dashboard**: Modern React-based UI for viewing alerts in real-time
+- **Suricata Integration**: Supports alerts from Suricata IDS/IPS
+- **WebSocket Communication**: Real-time updates between backend and frontend
 
 ## Architecture
 
-### Backend (packet-sniffer/)
-- **Language**: TypeScript/Node.js
-- **Key Components**:
-  - `sniffer.ts`: Packet capture using 'cap' library
-  - `analyzer.ts`: Payload analysis and pattern matching
-  - `server.ts`: Main server entry point
-  - `socket.ts`: WebSocket communication with frontend
-  - `suricata.ts`: Suricata alert integration
+The project consists of two main components:
 
-### Frontend (packet-ui/)
-- **Framework**: React + Vite
-- **Styling**: Tailwind CSS
-- **Real-time Updates**: Socket.IO client for live alerts
+### packet-sniffer (Backend)
+- Node.js/TypeScript server
+- Uses `cap` library for packet capture
+- Analyzes TCP and UDP payloads
+- Emits alerts via Socket.IO
+- Integrates with Suricata for additional threat detection
+
+### packet-ui (Frontend)
+- React + TypeScript + Vite
+- Real-time dashboard with Tailwind CSS
+- Connects to backend via Socket.IO
+- Displays alerts with filtering and details view
 
 ## Prerequisites
 
-- Node.js (v16+)
+- Node.js (v16 or higher)
 - npm or yarn
-- libpcap (system dependency for packet capture)
+- libpcap (for packet capture)
 - Suricata (optional, for IDS integration)
 
 ### Installing libpcap
@@ -46,7 +47,8 @@ sudo apt-get install libpcap-dev
 brew install libpcap
 ```
 
-**Windows:** Install WinPcap or Npcap
+**Windows:**
+Download and install WinPcap or Npcap from https://nmap.org/npcap/
 
 ## Installation
 
@@ -77,7 +79,7 @@ cd packet-sniffer
 npm run dev
 ```
 
-This starts the packet sniffer on port 8080 and begins capturing packets.
+This starts the packet sniffer server on port 8080.
 
 ### Running the Frontend
 
@@ -86,7 +88,7 @@ cd packet-ui
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser to view the UI.
+This starts the development server (typically on http://localhost:5173).
 
 ### Building for Production
 
@@ -106,39 +108,31 @@ npm run preview
 
 ## Configuration
 
-### Packet Capture Device
+### Packet Sniffer
 
-The sniffer automatically selects the first available network device. To specify a different device, modify `sniffer.ts`:
+The sniffer automatically detects available network interfaces and uses the first one. To change this, modify `src/sniffer.ts`.
 
-```typescript
-const device = devices[0].name; // Change index or specify device name
-```
+Current filter: `"tcp or udp"` - captures only TCP and UDP traffic.
 
 ### Alert Patterns
 
-Sensitive patterns are defined in `analyzer.ts`:
-
-```typescript
-const PATTERNS = [
-  /password/i,
-  /token=/i,
-  /authorization/i,
-  /ssh-rsa/i
-];
-```
-
-Add or modify regex patterns as needed.
+Sensitive data patterns are defined in `src/analyzer.ts`. Current patterns include:
+- Passwords
+- Authorization tokens
+- SSH keys
 
 ### Suricata Integration
 
-Ensure Suricata is configured to output alerts to a file that `suricata.ts` can read. Update the file path in `suricata.ts` if necessary.
+To enable Suricata alerts, ensure Suricata is running and configured to output to a file that the application can read. Modify `src/suricata.ts` for custom paths.
+
+
 
 ## Security Considerations
 
-- **Permissions**: Packet capture requires root/administrative privileges
-- **Network Monitoring**: Only monitor networks you have permission to access
-- **Data Handling**: Payload data may contain sensitive information
-- **Production Use**: Implement proper authentication and authorization
+- This tool captures network traffic and may contain sensitive information
+- Use only on networks you have permission to monitor
+- Be aware of local privacy laws and regulations
+- Consider running in isolated environments for testing
 
 ## Development
 
@@ -146,18 +140,18 @@ Ensure Suricata is configured to output alerts to a file that `suricata.ts` can 
 
 ```
 Packet-Capture/
-├── packet-sniffer/          # Backend
+├── packet-sniffer/          # Backend Node.js application
 │   ├── src/
-│   │   ├── analyzer.ts      # Payload analysis
-│   │   ├── server.ts        # Main server
-│   │   ├── sniffer.ts       # Packet capture
-│   │   ├── socket.ts        # WebSocket handling
-│   │   └── suricata.ts      # IDS integration
+│   │   ├── analyzer.ts      # Payload analysis logic
+│   │   ├── server.ts        # Main server entry point
+│   │   ├── sniffer.ts       # Packet capture implementation
+│   │   ├── socket.ts        # WebSocket communication
+│   │   └── suricata.ts      # Suricata integration
 │   ├── package.json
 │   └── tsconfig.json
-├── packet-ui/               # Frontend
+├── packet-ui/               # Frontend React application
 │   ├── src/
-│   │   ├── App.tsx          # Main component
+│   │   ├── App.tsx          # Main application component
 │   │   ├── types/
 │   │   └── utils/
 │   ├── package.json
@@ -165,27 +159,27 @@ Packet-Capture/
 └── README.md
 ```
 
-### Adding New Alert Types
+### Adding New Patterns
 
-1. Update the `Alert` interface in `packet-ui/src/types/alert.ts`
-2. Modify the analysis logic in `analyzer.ts`
-3. Update the UI components to display new fields
+To add new detection patterns, edit the `PATTERNS` array in `packet-sniffer/src/analyzer.ts`:
 
-## Troubleshooting
-
-### No Capture Devices Found
-- Ensure libpcap is installed
-- Run with elevated privileges: `sudo npm run dev`
-- Check network interface permissions
-
-### Connection Issues
-- Verify backend is running on port 8080
-- Check firewall settings
-- Ensure WebSocket connections are allowed
-
-### Build Errors
-- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-- Check TypeScript compilation: `npm run build`
+```typescript
+const PATTERNS = [
+    /password/i,
+    /token=/i,
+    /authorization/i,
+    /ssh-rsa/i,
+    /api[_-]?key/i,
+    /secret/i,
+    /private[_-]?key/i,
+    /bearer\s+/i,
+    /aws[_-]?secret/i,
+    /database[_-]?url/i,
+    /connection[_-]?string/i,
+    /jwt/i
+    ///your-new-pattern/i  // Add your regex here
+];
+```
 
 ## Contributing
 
@@ -197,8 +191,8 @@ Packet-Capture/
 
 ## License
 
-ISC License
+ISC License - see individual package.json files for details.
 
 ## Disclaimer
 
-This tool is for educational and authorized security testing purposes only. Use responsibly and in compliance with applicable laws and regulations.
+This tool is for educational and security research purposes. Users are responsible for complying with applicable laws and regulations when using network monitoring tools.

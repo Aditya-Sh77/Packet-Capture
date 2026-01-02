@@ -1,30 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-
-/* =======================
-   Types
-======================= */
-// type Alert = {
-//   id: string;
-//   time: string;
-//   src: string;
-//   dst: string;
-//   protocol: string;
-//   src_port: number;
-//   dst_port: number;
-//   severity: "low" | "medium" | "high";
-//   reason: string;
-//   payload_preview: string | null;
-//   payload_label: string | null;
-//   payload_ascii: string | null;
-//   raw_hex: string | null;
-//   source?: "node" | "suricata"; // future-proof
-//   suricata?: {
-//     rule_id: number;
-//     category: string;
-//   };
-
-// };
 import { Alert } from "./types/alert";
 
 /* =======================

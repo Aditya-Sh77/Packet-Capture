@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Alert } from "./types/alert";
-
-/* =======================
-   Utils
-======================= */
-function severityColor(s: Alert["severity"]) {
-  if (s === "high") return "bg-red-500";
-  if (s === "medium") return "bg-yellow-500";
-  return "bg-emerald-400";
-}
+import { severityColor } from "./utils/severity";
 
 /* =======================
    App

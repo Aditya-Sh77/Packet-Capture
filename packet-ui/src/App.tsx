@@ -40,7 +40,7 @@ export default function App() {
 
   // WebSocket connection (transport isolated)
   useEffect(() => {
-    const socket = io("http://127.0.0.1:8080", {
+    const socket = io("https://localhost:8443", {
       transports: ["websocket"]
     });
 

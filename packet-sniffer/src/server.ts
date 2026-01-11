@@ -3,6 +3,6 @@ import { startSniffer } from "./sniffer";
 import { start } from "repl";
 import { startSuricataReader } from "./suricata";
 
-startSocket(8080);
+startSocket(8443);
 startSniffer();
 startSuricataReader();

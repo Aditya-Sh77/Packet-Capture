@@ -9,7 +9,7 @@ const express = require("express");
 let io: Server | null = null;
 
 export function startSocket(port: number) {
-  const app = express();
+ const app = express();
 
   const httpsServer = https.createServer({
     key: readFileSync(path.join(process.cwd(), 'certs', 'key.pem')),

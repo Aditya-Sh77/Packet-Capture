@@ -86,7 +86,19 @@ export default function App() {
             {darkMode ? "☀️" : "🌙"}
           </button>
         </div>
-
+        <section className="flex justify-center items-center">
+          Source: <select
+            className="ml-2 px-2 py-1 rounded-lg border-1 text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+            onChange={(e) => {
+              const source = e.target.value;
+              socketRef.current?.send(JSON.stringify({ type: "source", source }));
+            }}
+          > 
+            <option value="all">All</option>
+            <option value="live">Live Capture</option>
+            <option value="suricata">Suricata</option>
+          </select>
+        </section>
         <section className="flex justify-center items-center">
           <button
             className="px-3 py-1 rounded-lg border-1 text-sm mt-3 mb-3 mr-10 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"

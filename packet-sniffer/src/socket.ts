@@ -29,6 +29,11 @@ export function startSocket(port: number) {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
+    // socket.on("source", (data) => {
+    //   const source = typeof data === "string" ? data : data.source;
+    //   console.log("Source changed to:", source);
+    // });
+
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
     });

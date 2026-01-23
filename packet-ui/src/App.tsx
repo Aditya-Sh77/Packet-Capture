@@ -218,8 +218,8 @@ export default function App() {
 
             <div>
               <h4 className="font-semibold mb-1">Raw hex</h4>
-              <pre className="bg-gray-100 text-green-400 p-3 rounded text-xs">
-                {selected.raw_hex}
+              <pre className="bg-gray-100 dark:bg-gray-800 text-green-400 p-3 rounded text-xs">
+                {selected.raw_hex?.slice(0, 150) || "<no data>"}
               </pre>
             </div>
 

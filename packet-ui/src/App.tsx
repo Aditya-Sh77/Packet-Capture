@@ -13,6 +13,7 @@ export default function App() {
   const [capture, setCapture] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
+  const [filterType, setFilterType] = useState<"all" | "network" | "suricata">("all");
 
   /* ---- refs (for streaming correctness) ---- */
   const alertsRef = useRef<Alert[]>([]);
@@ -87,16 +88,16 @@ export default function App() {
           </button>
         </div>
         <section className="flex justify-center items-center">
-          Source: <select
+          Filter: <select
             className="ml-2 px-2 py-1 rounded-lg border-1 text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+            value={filterType}
             onChange={(e) => {
-              const source = e.target.value;
-              socketRef.current?.send(JSON.stringify({ type: "source", source }));
+              setFilterType(e.target.value as "all" | "network" | "suricata");
             }}
           > 
-            <option value="all">All</option>
-            <option value="live">Live Capture</option>
-            <option value="suricata">Suricata</option>
+            <option value="all">All Packets</option>
+            <option value="network">Normal Packets</option>
+            <option value="suricata">Suricata Alerts</option>
           </select>
         </section>
         <section className="flex justify-center items-center">
@@ -121,11 +122,11 @@ export default function App() {
         </section>
 
         <div className="text-gray-500 dark:text-gray-400 text-sm mb-3">
-          Live stream — {alerts.length} alerts
+          Live stream — {alerts.filter(a => filterType === "all" || a.source === filterType).length} alerts
         </div>
 
         <div className="overflow-y-auto flex-1 space-y-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-900">
-          {alerts.map((al) => (
+          {alerts.filter(a => filterType === "all" || a.source === filterType).map((al) => (
             <div
               key={al.id}
               onClick={() => setSelected(al)}

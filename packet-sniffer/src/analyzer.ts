@@ -35,7 +35,8 @@ export function analyze(
         payload_label: "unlabeled",
         protocol: protocol,
         src_port: 12345,
-        dst_port: 80
+        dst_port: 80,
+        source: "network"
       };
 
 }

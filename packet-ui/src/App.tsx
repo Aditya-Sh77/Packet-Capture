@@ -75,7 +75,7 @@ export default function App() {
   return (
     <div className="flex h-screen font-sans bg-white dark:bg-gray-900 text-black dark:text-white">
       {/* ================= Sidebar ================= */}
-      <div className="w-[30%] border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 flex flex-col">
+      <div className="w-[30%] border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 flex flex-col">
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-xl font-bold">Packet Alerts</h2>
           <button
@@ -89,14 +89,14 @@ export default function App() {
 
         <section className="flex justify-center items-center">
           <button
-            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 mr-10 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
+            className="px-3 py-1 rounded-lg border-1 text-sm mt-3 mb-3 mr-10 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
             onClick={() => setCapture((c) => !c)}
           >
             {capture ? "Stop Capture" : "Start Capture"}
           </button>
 
           <button
-            className="px-3 py-1 rounded-lg text-sm mt-3 mb-3 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
+            className="px-3 py-1 rounded-lg border-1 text-sm mt-3 mb-3 w-[30%] bg-gray-200 hover:bg-gray-300 hover:cursor-pointer dark:bg-gray-800 dark:hover:bg-gray-700"
             onClick={() => {
               socketRef.current?.send(JSON.stringify({ type: "clear" }));
               alertsRef.current = [];
@@ -112,12 +112,12 @@ export default function App() {
           Live stream — {alerts.length} alerts
         </div>
 
-        <div className="overflow-y-auto flex-1 space-y-2">
+        <div className="overflow-y-auto flex-1 space-y-2 p-2 rounded-lg bg-gray-50 dark:bg-gray-900">
           {alerts.map((al) => (
             <div
               key={al.id}
               onClick={() => setSelected(al)}
-              className={`${selected?.id === al.id ? 'bg-gray-300 dark:bg-gray-700' : 'bg-gray-100 dark:bg-gray-800'} hover:bg-gray-300 dark:hover:bg-gray-700 rounded-xl p-3 shadow-sm cursor-pointer flex justify-between items-center`}
+              className={`${selected?.id === al.id ? 'bg-gray-300 dark:bg-gray-700 border-2 border-gray-500 dark:border-gray-500' : 'bg-gray-100 dark:bg-gray-800'} hover:bg-gray-300 dark:hover:bg-gray-700 rounded-xl p-3 shadow-sm cursor-pointer flex justify-between items-center`}
             >
               <div>
                 <div className="font-semibold">
@@ -155,15 +155,15 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+              <div className="bg-gray-200 dark:bg-gray-800 p-3 rounded-lg">
                 <div className="font-semibold">Src</div>
                 <div>{selected.src}:{selected.src_port}</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+              <div className="bg-gray-200 dark:bg-gray-800 p-3 rounded-lg">
                 <div className="font-semibold">Dst</div>
                 <div>{selected.dst}:{selected.dst_port}</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+              <div className="bg-gray-200 dark:bg-gray-800 p-3 rounded-lg">
                 <div className="font-semibold">Protocol</div>
                 <div>{selected.protocol}</div>
               </div>
@@ -171,7 +171,7 @@ export default function App() {
 
             <div>
               <h4 className="font-semibold mb-1">Reason</h4>
-              <div className="bg-white dark:bg-gray-800 p-3 rounded-lg">
+              <div className="bg-yellow-100 dark:bg-gray-800 p-3 rounded-lg">
                 {selected.reason}
               </div>
             </div>
@@ -198,7 +198,7 @@ export default function App() {
               ) : selected.payload_label === "EMPTY" ? (
                 <div className="p-3 bg-gray-50 rounded">No payload</div>
               ) : (
-                <pre className="bg-slate-900 text-slate-200 p-3 rounded">
+                <pre className="p-3 rounded bg-slate-300 text-slate-900 dark:bg-slate-900 dark:text-slate-200">
                   {selected.payload_ascii}
                 </pre>
               )}
@@ -206,14 +206,14 @@ export default function App() {
 
             <div>
               <h4 className="font-semibold mb-1">Raw hex</h4>
-              <pre className="bg-black text-green-400 p-3 rounded text-xs">
+              <pre className="bg-gray-100 text-green-400 p-3 rounded text-xs">
                 {selected.raw_hex}
               </pre>
             </div>
 
             <div className="flex gap-2">
               <button
-                className="px-3 py-1 bg-blue-500 text-white rounded"
+                className="px-3 py-1 bg-blue-500 text-white rounded hover:cursor-pointer"
                 onClick={() => {
                   socketRef.current?.send(
                     JSON.stringify({ type: "ack", id: selected.id })
@@ -224,7 +224,7 @@ export default function App() {
               </button>
 
               <button
-                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded"
+                className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:cursor-pointer"
                 onClick={() =>
                   navigator.clipboard.writeText(
                     JSON.stringify(selected, null, 2)

@@ -114,7 +114,7 @@ function processLine(line: string) {
     const event = JSON.parse(line);
     if (event.event_type !== "alert") return;
 
-    console.log("SURICATA ALERT:", event);
+    console.log("SURICATA ALERT GENERATED");
 
     emitAlert({
       id: event.flow_id.toString(),

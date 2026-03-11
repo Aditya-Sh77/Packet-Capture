@@ -76,7 +76,7 @@ npm install
 
 ```bash
 cd packet-sniffer
-npm run dev
+echo "Your password for sudo" | npm run dev #for sudo access to suricata
 ```
 
 This starts the packet sniffer server on port 8080.
